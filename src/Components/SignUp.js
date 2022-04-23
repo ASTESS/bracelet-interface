@@ -1,6 +1,7 @@
 import React from 'react';
 import {Alert, Backdrop, Box, Button, Card, IconButton, Snackbar, TextField} from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import {useNavigate} from "react-router-dom";
 
 export default function SignUp(props) {
 
@@ -9,8 +10,9 @@ export default function SignUp(props) {
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
     const [phone, setPhone] = React.useState('');
-
     const [passwordDontMatch, setPasswordDontMatch] = React.useState(false);
+
+    const navigate = useNavigate();
 
     function signUp(){
         if(password === confirmPassword){
@@ -27,11 +29,16 @@ export default function SignUp(props) {
                 }).toString()
             }).then(r => r.json()).then(data => {
                 console.log(data);
+                localStorage.setItem("token", data.token);
+                navigate('/overview');
             })
+
+
+
+            localStorage.setItem('token', "token"); //temp
         }else{
             setPasswordDontMatch(true);
         }
-
     }
 
     return(
@@ -77,7 +84,7 @@ export default function SignUp(props) {
                         onChange={e => setPhone(e.target.value)}
                     />
                 </Box>
-                <Button onClick={() => signUp()} style={{margin: 10}} variant={"contained"}>Sign up</Button>
+                <Button onClick={() => {signUp(); props.toggle();}} style={{margin: 10}} variant={"contained"}>Sign up</Button>
             </Card>
             <Snackbar open={passwordDontMatch} autoHideDuration={10000} onClose={() => setPasswordDontMatch(false)}>
                 <Alert severity="error">Password's does not match</Alert>

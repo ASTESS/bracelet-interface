@@ -1,19 +1,31 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Box, Button, Card, TextField, Typography} from "@mui/material";
 import SignUp from "../Components/SignUp";
+import {useNavigate} from 'react-router-dom';
 
 export default function Login(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const [showSingUp, setShowSingUp] = useState(false);
+    const navigate = useNavigate();
 
     function toggleSingUp(){
         setShowSingUp(!showSingUp);
     }
 
+    useEffect(() => {
+            if(localStorage.getItem('token')){
+                navigate('/overview');
+            }
+    }, [localStorage.getItem('token')]);
+
+
+
 
     function login(){
+
+
         fetch('http://localhost:3333/authenticate', {
             method: 'POST',
             headers: {
@@ -25,7 +37,14 @@ export default function Login(){
             }).toString()
         }).then(r => r.json()).then(data => {
             console.log(data);
+            localStorage.setItem("token", data.token);
+            toggleSingUp(); //force rerender (needs to find another way to do it)
         })
+
+
+
+        localStorage.setItem('token', 'token'); //temp
+        toggleSingUp(); //force rerender (needs to find another way to do it)
     }
 
 
