@@ -15,9 +15,20 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 export default function OverView(){
-    const [data, setData] = useState([{name: "name", totalFalls: 25, fallsToday: 5, fallsYesterday: 2, batteryValue: 90}, {name: "test", totalFalls: 20, fallsToday: 1, fallsYesterday: 13, batteryValue: 75}, {name: "bob", totalFalls: 10, fallsToday: 5, fallsYesterday: 2, batteryValue: 95}]);
+    const [data, setData] = useState([
+        {name: "Shea Hayden", totalFalls: 25, fallsToday: 5, fallsYesterday: 27, batteryValue: 90},
+        {name: "Lloyd Hurley", totalFalls: 20, fallsToday: 1, fallsYesterday: 12, batteryValue: 75},
+        {name: "Mildred Pennington", totalFalls: 50, fallsToday: 10, fallsYesterday: 5, batteryValue: 95},
+        {name: "Deborah Maguire", totalFalls: 26, fallsToday: 12, fallsYesterday: 7, batteryValue: 36},
+        {name: "Catrin Trujillo", totalFalls: 72, fallsToday: 13, fallsYesterday: 6, batteryValue: 12},
+        {name: "Janelle Hartley", totalFalls: 98, fallsToday: 7, fallsYesterday: 9, batteryValue: 15},
+        {name: "Blessing Cordova", totalFalls: 54, fallsToday: 8, fallsYesterday: 8, batteryValue: 83},
+        {name: "Ameena Rhodes", totalFalls: 63, fallsToday: 14, fallsYesterday: 16, batteryValue: 72},
+        {name: "Saffron Shields", totalFalls: 36, fallsToday: 17, fallsYesterday: 18, batteryValue: 5},
+        {name: "Addison Whitworth", totalFalls: 78, fallsToday: 2, fallsYesterday: 27, batteryValue: 92},
+    ]);
     const [search, setSearch] = useState("");
-    const [sort, setSort] = useState("Name");
+    const [sort, setSort] = useState("Name Desc");
 
     useEffect(() => {
 
@@ -46,8 +57,6 @@ export default function OverView(){
         if(sort.endsWith("Asc")){
             setSort(sortBy + " Desc");
         }else if(sort.endsWith("Desc")){
-            setSort(sortBy + " Asc");
-        }else{
             setSort(sortBy + " Asc");
         }
     }

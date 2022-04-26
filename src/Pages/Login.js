@@ -36,15 +36,14 @@ export default function Login(){
                 "password": password
             }).toString()
         }).then(r => r.json()).then(data => {
-            console.log(data);
             localStorage.setItem("token", data.token);
-            toggleSingUp(); //force rerender (needs to find another way to do it)
+            window.dispatchEvent( new Event('storage') );
         })
 
 
 
         localStorage.setItem('token', 'token'); //temp
-        toggleSingUp(); //force rerender (needs to find another way to do it)
+        window.dispatchEvent( new Event('storage') );
     }
 
 

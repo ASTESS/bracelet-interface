@@ -5,21 +5,20 @@ import OverView from "./Pages/OverView";
 import {
     BrowserRouter as Router,
     Route,
-    Routes
+    Routes, useLocation
 } from "react-router-dom";
+import {AppBar, Box, Button, Toolbar, Typography} from "@mui/material";
+import NavBar from "./Components/NavBar";
+import NurseOverview from "./Pages/nurseOverview";
+import Bracelets from "./Pages/Bracelets";
+import HomePage from "./Pages/HomePage";
 
 function App() {
-  return (
-    <div className="App">
+    return (
         <Router>
-            <Routes>
-                <Route path="/" element={<Login />} />
-                <Route path="/overview" element={<OverView />} />
-            </Routes>
+            <HomePage/>
         </Router>
-
-    </div>
-  );
+    );
 }
 
 export default App;

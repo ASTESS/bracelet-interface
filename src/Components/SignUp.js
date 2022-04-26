@@ -28,9 +28,8 @@ export default function SignUp(props) {
                     //"phone": phone
                 }).toString()
             }).then(r => r.json()).then(data => {
-                console.log(data);
                 localStorage.setItem("token", data.token);
-                navigate('/overview');
+                window.dispatchEvent( new Event('storage') );
             })
 
 
