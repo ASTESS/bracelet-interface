@@ -13,22 +13,25 @@ import {
 
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import {useNavigate} from "react-router-dom";
 
 export default function OverView(){
     const [data, setData] = useState([
-        {name: "Shea Hayden", totalFalls: 25, fallsToday: 5, fallsYesterday: 27, batteryValue: 90},
-        {name: "Lloyd Hurley", totalFalls: 20, fallsToday: 1, fallsYesterday: 12, batteryValue: 75},
-        {name: "Mildred Pennington", totalFalls: 50, fallsToday: 10, fallsYesterday: 5, batteryValue: 95},
-        {name: "Deborah Maguire", totalFalls: 26, fallsToday: 12, fallsYesterday: 7, batteryValue: 36},
-        {name: "Catrin Trujillo", totalFalls: 72, fallsToday: 13, fallsYesterday: 6, batteryValue: 12},
-        {name: "Janelle Hartley", totalFalls: 98, fallsToday: 7, fallsYesterday: 9, batteryValue: 15},
-        {name: "Blessing Cordova", totalFalls: 54, fallsToday: 8, fallsYesterday: 8, batteryValue: 83},
-        {name: "Ameena Rhodes", totalFalls: 63, fallsToday: 14, fallsYesterday: 16, batteryValue: 72},
-        {name: "Saffron Shields", totalFalls: 36, fallsToday: 17, fallsYesterday: 18, batteryValue: 5},
-        {name: "Addison Whitworth", totalFalls: 78, fallsToday: 2, fallsYesterday: 27, batteryValue: 92},
+        {id: 1, name: "Shea Hayden", totalFalls: 25, fallsToday: 5, fallsYesterday: 27, batteryValue: 90},
+        {id: 2, name: "Lloyd Hurley", totalFalls: 20, fallsToday: 1, fallsYesterday: 12, batteryValue: 75},
+        {id: 3, name: "Mildred Pennington", totalFalls: 50, fallsToday: 10, fallsYesterday: 5, batteryValue: 95},
+        {id: 4, name: "Deborah Maguire", totalFalls: 26, fallsToday: 12, fallsYesterday: 7, batteryValue: 36},
+        {id: 5, name: "Catrin Trujillo", totalFalls: 72, fallsToday: 13, fallsYesterday: 6, batteryValue: 12},
+        {id: 6, name: "Janelle Hartley", totalFalls: 98, fallsToday: 7, fallsYesterday: 9, batteryValue: 15},
+        {id: 7, name: "Blessing Cordova", totalFalls: 54, fallsToday: 8, fallsYesterday: 8, batteryValue: 83},
+        {id: 8, name: "Ameena Rhodes", totalFalls: 63, fallsToday: 14, fallsYesterday: 16, batteryValue: 72},
+        {id: 9, name: "Saffron Shields", totalFalls: 36, fallsToday: 17, fallsYesterday: 18, batteryValue: 5},
+        {id: 10, name: "Addison Whitworth", totalFalls: 78, fallsToday: 2, fallsYesterday: 27, batteryValue: 92},
     ]);
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("Name Desc");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
 
@@ -162,7 +165,7 @@ export default function OverView(){
                                 }
                             }
                         }).map(row => (
-                            <TableRow key={row.name}>
+                            <TableRow key={row.name} onClick={() => navigate(`/patient/${row.id}`)}>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.totalFalls}</TableCell>
                                 <TableCell>{row.fallsToday}</TableCell>

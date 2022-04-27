@@ -5,6 +5,7 @@ import Login from "./Login";
 import OverView from "./OverView";
 import NurseOverview from "./nurseOverview";
 import Bracelets from "./Bracelets";
+import Patient from "./Patient";
 
 export default function HomePage(){
     const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function HomePage(){
               <Route path="/overview" element={<OverView />} />
               <Route path="/nurses" element={<NurseOverview/>} />
               <Route path="/bracelets" element={<Bracelets/>} />
+              <Route path="/patient/:id" element={<Patient/>} />
           </Routes>
       </div>
   );
