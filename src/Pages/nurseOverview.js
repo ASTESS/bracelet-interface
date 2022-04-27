@@ -103,13 +103,11 @@ export default function NurseOverview(){
                 />
             </div>
 
-            <Grid style={{paddingTop: "5%"}} container spacing={3}>
+            <Grid style={{paddingTop: "5%", display: 'flex', alignItems: 'center', justifyContent: 'center'}} container spacing={3}>
                 {nurses.map(nurse => {
                     if(search === "" || nurse.username.toLowerCase().includes(search.toLowerCase())){
                         return(
-                            <Grid item xs={12} sm={6} md={4} lg={3} key={nurse.id}>
                                 <NurseCard nurse={nurse} updateNurse={updateNurse} deleteNurse={deleteNurse}/>
-                            </Grid>
                         )
                     }
                 })}

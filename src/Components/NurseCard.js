@@ -9,7 +9,7 @@ export default function NurseCard(props) {
 
     if(open){
         return (
-            <Card style={{width: "60%"}}>
+            <Card style={{width: "30%", margin: 10}}>
                 <TextField
                     style={{width: "90%",marginTop: 20, alignSelf: "center"}}
                     label="Username"
@@ -22,16 +22,19 @@ export default function NurseCard(props) {
                     value={number}
                     onChange={e => setNumber(e.target.value)}
                 />
-                <Box style={{display: "flex", flexDirection: "row"}}>
+                <Box style={{display: "flex", flexDirection: "row",alignItems: "center", justifyContent: "center", padding: 10}}>
                     <Button
                         variant={"contained"}
-                        style={{alignSelf: "center", flex: 1, margin: 10}}
-                        onClick={() => props.deleteNurse(props.nurse)}>
+                        style={{flex:1, marginRight: 5}}
+                        onClick={() => {
+                            props.deleteNurse(props.nurse);
+                            setOpen(false);
+                        }}>
                         Delete
                     </Button>
                     <Button
                         variant={"contained"}
-                        style={{alignSelf: "flex-end", flex: 1, margin: 10}}
+                        style={{flex:1, marginLeft: 5}}
                         onClick={() => {
                             props.updateNurse(props.nurse, username, number);
                             setOpen(false);
@@ -53,7 +56,11 @@ export default function NurseCard(props) {
         );
     }else{
         return (
-            <Card style={{width: "60%"}} onClick={() => setOpen(true)}>
+            <Card style={{width: "30%", margin: 10}} onClick={() => {
+                setOpen(true);
+                setUsername(props.nurse.username);
+                setNumber(props.nurse.number);
+            }}>
                 <h1>{props.nurse.username}</h1>
                 <p>{props.nurse.number}</p>
             </Card>
