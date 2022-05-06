@@ -20,19 +20,21 @@ export default function NurseOverview(){
     const [username, setUsername] = useState("");
 
     function addNurse(nurse){
-        setNurses([...nurses, nurse]);
+        if (nurse.username !== "" && nurse.number !== "") {
+            setNurses([...nurses, nurse]);
 
-        fetch("http://localhost:8080/nurse", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
-            body: new URLSearchParams({
-                "username": nurse.username,
-                "number": nurse.number
-            }).toString(),
-        })
+            fetch("http://localhost:8080/nurse", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: new URLSearchParams({
+                    "username": nurse.username,
+                    "number": nurse.number
+                }).toString(),
+            })
+        }
     }
 
     function deleteNurse(nurse){

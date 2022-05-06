@@ -35,19 +35,21 @@ export default function Bracelets(){
     }, []);
 
     function addBracelet(bracelet){
-        setBracelets([...bracelets, bracelet]);
+        if (username !== "" && macAddress !== "") {
+            setBracelets([...bracelets, bracelet]);
 
-        fetch("http://localhost:8080/add-bracelet", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
-            body: new URLSearchParams({
-                "username": bracelet.username,
-                "macAddress": bracelet.macAddress
-            }).toString(),
-        })
+            fetch("http://localhost:8080/add-bracelet", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: new URLSearchParams({
+                    "username": bracelet.username,
+                    "macAddress": bracelet.macAddress
+                }).toString(),
+            })
+        }
     }
 
     function deleteBracelet(id){
