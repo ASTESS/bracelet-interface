@@ -1,7 +1,8 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 import NurseCard from "../Components/NurseCard";
 import {Autocomplete, Box, Button, Card, Grid, TextField} from "@mui/material";
-
+import Context from "../Contexts/Context";
+import SignUp from "../Components/SignUp";
 export default function NurseOverview(){
     const [nurses, setNurses] = useState([
         {id: 1,username: "name", number: "+123456789"},
@@ -15,7 +16,7 @@ export default function NurseOverview(){
 
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("");
-
+    const {showSingUp, showEditProfile, toggleSingUp, toggleEditProfile} = useContext(Context)
     const [number, setNumber] = useState("");
     const [username, setUsername] = useState("");
 
@@ -80,6 +81,7 @@ export default function NurseOverview(){
     }, []);
 
     return(
+        <div>
         <div style={{padding: 20, height: "100%", width: "100%"}}>
 
             <div style={{width: "30%", top: "5%", left: 10}}>
@@ -126,6 +128,10 @@ export default function NurseOverview(){
                     setNumber("");
                 }}>Add Nurse</Button>
             </Card>
+        </div>
+        <div>
+            {showSingUp ? <SignUp toggle={() => toggleSingUp()}/> : null}
+        </div>
         </div>
     );
 }

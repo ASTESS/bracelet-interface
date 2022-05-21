@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Box, Button, Card, TextField, Typography} from "@mui/material";
 import SignUp from "../Components/SignUp";
 import {useNavigate} from 'react-router-dom';
+import axios from 'axios';
 
 export default function Login(){
     const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ export default function Login(){
     }
 
     useEffect(() => {
-            if(localStorage.getItem('token')){
+            if(localStorage.getItem("token") !== null && localStorage.getItem("token") !== undefined && localStorage.getItem("token") !== ""){
                 navigate('/overview');
             }
     }, [localStorage.getItem('token')]);
@@ -26,23 +27,18 @@ export default function Login(){
     function login(){
 
 
-        fetch('http://localhost:3333/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: new URLSearchParams({
-                "email": email,
-                "password": password
-            }).toString()
-        }).then(r => r.json()).then(data => {
-            localStorage.setItem("token", data.token);
+        axios.post("https://brace-guardian.herokuapp.com/authenticate", {
+            email: email, 
+            password: password            
+        }).then(res => {
+            console.log(res.data.token)
+            localStorage.setItem("token", res.data.token);
             window.dispatchEvent( new Event('storage') );
         })
 
 
 
-        localStorage.setItem('token', 'token'); //temp
+        //localStorage.setItem('token', 'token'); //temp
         window.dispatchEvent( new Event('storage') );
     }
 
@@ -73,7 +69,7 @@ export default function Login(){
                 </Box>
             </Card>
 
-            {showSingUp ? <SignUp toggle={toggleSingUp}/> : null}
+            {showSingUp ? <SignUp toggle={() => toggleSingUp()}/> : null}
         </div>
 
 

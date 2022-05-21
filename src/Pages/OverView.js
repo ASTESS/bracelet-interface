@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {
     Autocomplete, Box,
     Button,
@@ -14,6 +14,11 @@ import {
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import {useNavigate} from "react-router-dom";
+import Context from "../Contexts/Context";
+import SignUp from "../Components/SignUp";
+import EditPatient from "../Components/EditPatient";
+import AddPatient from "../Components/AddPatient";
+import axios from "axios";
 
 export default function OverView(){
     const [data, setData] = useState([
@@ -30,31 +35,26 @@ export default function OverView(){
     ]);
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("Name Desc");
-
+    const {showAddProfile, showSingUp, showEditProfile, toggleSingUp, toggleEditProfile, passProfile, deleteProfile, toggleAddProfile} = useContext(Context)
     const navigate = useNavigate();
+
+    
 
     useEffect(() => {
 
-        fetch("http://localhost:3333/users", {
-            method: "GET",
+        axios.get("https://brace-guardian.herokuapp.com/get-profiles", {
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
+                authorization: "Bearer " + localStorage.getItem("token")
             }
-        }).then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error("Something went wrong ...");
-            }
-        }).then(data => {
-            setData(data);
+        }).then(res=> {
+            console.log(res.data)
+            setData(res.data);
         }).catch(error => {
             console.log(error);
         });
 
 
-    }, []);
+    }, [data]);
 
     function sortBy(sortBy){
         if(sort.endsWith("Asc")){
@@ -64,15 +64,16 @@ export default function OverView(){
         }
     }
     return(
+        
         <div>
-            <Typography variant="h4">Overview</Typography>
+            <Typography variant="h4" style={{margin: "2rem 0"}}>Overview</Typography>
 
-            <div className="search-box" style={{float: "right", padding: 10}}>
+            <div className="search-box" style={{display: "flex", justifyContent: "space-around", alignItems: 'center', margin: '0 2rem'}}>
                 <Autocomplete
                     id="search"
                     value={search}
                     options={data.map(option => option.name)}
-                    style={{ width: 300 }}
+                    style={{ width: '100%' , paddingRight: "3rem"}}
                     onChange={(event, newValue) => {
                         if( newValue !== null ){
                             setSearch(newValue);
@@ -88,6 +89,7 @@ export default function OverView(){
                         />
                     )}
                 />
+                <Button onClick={() => {toggleAddProfile()}}>Add Patient</Button>
             </div>
 
             <TableContainer>
@@ -129,6 +131,11 @@ export default function OverView(){
                                     {(sort.includes("Battery Value") && sort.endsWith("Desc")) ? <ArrowDropDownIcon/> : null}
                                 </Box>
                             </TableCell>
+                            <TableCell>
+                                <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
+                                  
+                                </Box>
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -147,35 +154,41 @@ export default function OverView(){
                                 }
                             }else if(sort.includes("Falls Today")){
                                 if(sort.endsWith("Desc")){
-                                    return b.fallsToday - a.fallsToday;
+                                    return b.todayFalls - a.todayFalls;
                                 }else if(sort.endsWith("Asc")){
-                                    return a.fallsToday - b.fallsToday;
+                                    return a.todayFalls - b.todayFalls;
                                 }
                             }else if(sort.includes("Falls Yesterday")){
                                 if(sort.endsWith("Desc")){
-                                    return b.fallsYesterday - a.fallsYesterday;
+                                    return b.yesterdayFalls - a.yesterdayFalls;
                                 }else if(sort.endsWith("Asc")){
-                                    return a.fallsYesterday - b.fallsYesterday;
+                                    return a.yesterdayFalls - b.yesterdayFalls;
                                 }
                             }else if(sort.includes("Battery Value")){
                                 if(sort.endsWith("Desc")){
-                                    return b.batteryValue - a.batteryValue;
+                                    return b.battery_level - a.battery_level;
                                 }else if(sort.endsWith("Asc")){
-                                    return a.batteryValue - b.batteryValue;
+                                    return a.battery_level - b.battery_level;
                                 }
                             }
                         }).map(row => (
-                            <TableRow key={row.name} onClick={() => navigate(`/patient/${row.id}`)}>
+                            <TableRow key={row.name}>
                                 <TableCell>{row.name}</TableCell>
                                 <TableCell>{row.totalFalls}</TableCell>
-                                <TableCell>{row.fallsToday}</TableCell>
-                                <TableCell>{row.fallsYesterday}</TableCell>
-                                <TableCell>{row.batteryValue}</TableCell>
+                                <TableCell>{row.todayFalls}</TableCell>
+                                <TableCell>{row.yesterdayFalls}</TableCell>
+                                <TableCell>{row.battery_level}</TableCell>
+                                <TableCell><Button onClick={() => {passProfile(row.name, row.id); navigate(`/patient/${row.id}`)}}>Details</Button> | <Button onClick={() => {passProfile(row.name, row.id); toggleEditProfile()}} >Edit</Button> | <Button onClick={() => {deleteProfile(row.id)}}>Delete</Button></TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
+            {showSingUp ? <SignUp toggle={() => toggleSingUp()}/> : null}
+            {showEditProfile ? <EditPatient toggle={() => toggleEditProfile()}/> : null}
+            {showAddProfile ? <AddPatient toggle={() => toggleAddProfile()}/> : null}
         </div>
+        
+        
     );
 }

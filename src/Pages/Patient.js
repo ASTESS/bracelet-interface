@@ -1,18 +1,26 @@
+
+import {
+    Autocomplete, Box,
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField, Typography
+} from "@mui/material";
+
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import {useEffect, useState, useContext} from "react";
 import {Line, Tooltip, XAxis, LineChart, YAxis} from "recharts";
+import Context from "../Contexts/Context";
+import axios from "axios";
 
 export default function Patient() {
     const { id } = useParams();
-    const [patient, setPatient] = useState(
-        {name: "name", data: [
-            {date: new Date(Date.now() - (3600 * 1000 * 24 * 5)), falls: 5},
-            {date: new Date(Date.now() - (3600 * 1000 * 24 * 4)), falls: 10},
-            {date: new Date(Date.now() - (3600 * 1000 * 24 * 3)), falls: 4},
-            {date: new Date(Date.now() - (3600 * 1000 * 24 * 2)), falls: 1},
-            {date: new Date(Date.now() - (3600 * 1000 * 24)), falls: 7},
-            {date: new Date(), falls: 12},
-            ]});
+    const [patient, setPatient] = useState([]);
+    const {profileName} = useContext(Context)
 
     const renderCustomXAxis = (props) => {
         return new Date(props).toLocaleDateString("en-US", {
@@ -22,34 +30,46 @@ export default function Patient() {
     };
 
     useEffect(() => {
-        fetch(`http://localhost:3333/patients/${id}`, {
-            method: "GET",
+        axios.get(`https://brace-guardian.herokuapp.com/patients/${id}`, {
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
+                authorization: "Bearer " + localStorage.getItem("token")
             }
+        }).then(res => {
+            console.log(res.data)
+            setPatient(res.data);
         })
-            .then(res => res.json())
-            .then(data => {
-                setPatient(data);
-            })
-            .catch(err => console.log(err));
+        
+       
     }, []);
 
   return (
     <div>
-        <h1>{patient.name}</h1>
-        <p>{id}</p>
-        <LineChart
-            width={400}
-            height={400}
-            data={patient.data}
-        >
-            <Line type="monotone" dataKey="falls" stroke="#8884d8" />
-            <XAxis dataKey="date"  tickFormatter={renderCustomXAxis}/>
-            <YAxis />
-            <Tooltip />
-        </LineChart>
-    </div>
+            <Typography variant="h4" style={{margin: "2rem 0"}}>{profileName}</Typography>
+
+            
+
+            <TableContainer>
+                <Table>
+                    <TableHead>
+                        <TableRow sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <TableCell>
+                                <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
+                                <Button>Date | Hour</Button>
+                                    
+                                </Box>
+                            </TableCell>                           
+                        </TableRow>
+                    </TableHead>
+                    <TableBody sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>
+                        {patient?.map(row => (
+                            <TableRow key={row.dataId}>
+                                <TableCell>{row.created_at}</TableCell>                                
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            
+        </div>
   );
 }

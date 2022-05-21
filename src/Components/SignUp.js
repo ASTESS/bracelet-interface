@@ -9,7 +9,7 @@ export default function SignUp(props) {
     const [password, setPassword] = React.useState('');
     const [confirmPassword, setConfirmPassword] = React.useState('');
     const [firstName, setFirstName] = React.useState('');
-    const [phone, setPhone] = React.useState('');
+    
     const [passwordDontMatch, setPasswordDontMatch] = React.useState(false);
 
     const navigate = useNavigate();
@@ -25,7 +25,7 @@ export default function SignUp(props) {
                     "email": email,
                     "password": password,
                     "firstName": firstName,
-                    //"phone": phone
+                    
                 }).toString()
             }).then(r => r.json()).then(data => {
                 localStorage.setItem("token", data.token);
@@ -44,12 +44,18 @@ export default function SignUp(props) {
         <Backdrop open>
             <Card style={{width: "50%"}}>
 
-                <IconButton style={{float: "right"}} onClick={() => props.toggle()}>
+                <IconButton style={{float: "right"}} onClick={() => {props.toggle()}}>
                     <CloseIcon/>
                 </IconButton>
 
                 <h1>Sign Up</h1>
                 <Box sx={{display: "flex", flexDirection: "column"}} style={{paddingTop: 10}}>
+                    <TextField
+                        style={{width: "90%", alignSelf: "center", marginBottom: 20}}
+                        label="Name"
+                        value={firstName}
+                        onChange={e => setFirstName(e.target.value)}
+                    />
                     <TextField
                         style={{width: "90%", alignSelf: "center"}}
                         label="Email"
@@ -69,18 +75,6 @@ export default function SignUp(props) {
                         label="Confirm Password"
                         value={confirmPassword}
                         onChange={e => setConfirmPassword(e.target.value)}
-                    />
-                    <TextField
-                        style={{width: "90%", alignSelf: "center", marginTop: 20}}
-                        label="First Name"
-                        value={firstName}
-                        onChange={e => setFirstName(e.target.value)}
-                    />
-                    <TextField
-                        style={{width: "90%", alignSelf: "center", marginTop: 20}}
-                        label="Phone"
-                        value={phone}
-                        onChange={e => setPhone(e.target.value)}
                     />
                 </Box>
                 <Button onClick={() => {signUp(); props.toggle();}} style={{margin: 10}} variant={"contained"}>Sign up</Button>
