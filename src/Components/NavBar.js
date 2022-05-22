@@ -18,7 +18,8 @@ export default function NavBar(){
             <AppBar position="static" style={{backgroundColor: "#6200ea"}}>
                 <Toolbar>
                     <Box flexGrow={1}>
-                        <Button onClick={() => toggleSingUp()} color="inherit">New User</Button>
+                        {//<Button onClick={() => toggleSingUp()} color="inherit">New User</Button>
+                        }
                         <Button onClick={() => navigate("/overview")} color="inherit">Overview</Button>
                         <Button onClick={() => navigate("/nurses")} color="inherit">Nurses</Button>
                         <Button onClick={() => navigate("/bracelets")} color="inherit">Bracelets</Button>
