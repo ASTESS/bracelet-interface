@@ -20,6 +20,9 @@ import axios from "axios";
 export default function Patient() {
     const { id } = useParams();
     const [patient, setPatient] = useState([]);
+    const [date, setDate] = useState([]);
+    const [hour, setHour] = useState([]);
+    const [distance, setDistance] = useState([]);
     const {profileName} = useContext(Context)
 
     const renderCustomXAxis = (props) => {
@@ -38,7 +41,7 @@ export default function Patient() {
             console.log(res.data)
             setPatient(res.data);
         })
-        
+        Patient.split('')
        
     }, []);
 
@@ -54,10 +57,19 @@ export default function Patient() {
                         <TableRow sx={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                             <TableCell>
                                 <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
-                                <Button>Date | Hour</Button>
-                                    
+                                    <Button>Date</Button> 
                                 </Box>
-                            </TableCell>                           
+                            </TableCell>   
+                            <TableCell>
+                                <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
+                                    <Button>Hour</Button> 
+                                </Box>
+                            </TableCell>    
+                            <TableCell>
+                                <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
+                                    <Button>Distance</Button> 
+                                </Box>
+                            </TableCell>                      
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column'}}>

@@ -63,7 +63,7 @@ export default function Login(){
                 </Box>
                 <Box sx={{display: 'flex', alignItems: 'center', pl: 1, pb: 1}}>
                     <Typography onClick={() => toggleSingUp()} style={{paddingLeft: 10, flex: 1, textDecoration: "underline"}}>
-                        Register
+                        Forgot your password?
                     </Typography>
                     <Button style={{margin: 20, flex: 1}} variant={"contained"} onClick={login}>Login</Button>
                 </Box>

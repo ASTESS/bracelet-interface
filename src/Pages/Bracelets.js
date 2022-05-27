@@ -1,18 +1,12 @@
 import BraceletCard from "../Components/BraceletCard";
 import {useEffect, useState} from "react";
 import {Autocomplete, Button, Card, Grid, TextField} from "@mui/material";
+import axios from "axios";
 
 export default function Bracelets(){
-    const [bracelets, setBracelets] = useState([
-        {id: 1,username: "name1", macAddress: "00:00:00:00:00:01"},
-        {id: 2,username: "name2", macAddress: "00:00:00:00:00:02"},
-        {id: 3,username: "name3", macAddress: "00:00:00:00:00:03"},
-        {id: 4,username: "name4", macAddress: "00:00:00:00:00:04"},
-        {id: 5,username: "name5", macAddress: "00:00:00:00:00:05"},
-        {id: 6,username: "name6", macAddress: "00:00:00:00:00:06"},
-        {id: 7,username: "name7", macAddress: "00:00:00:00:00:07"},
-    ]);
-
+    const [bracelets, setBracelets] = useState([]);
+    const [profiles, setProfiles] = useState([]);
+    
     const [search, setSearch] = useState("");
     const [sort, setSort] = useState("");
 
@@ -20,56 +14,76 @@ export default function Bracelets(){
     const [macAddress, setMacAddress] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:3333/get-bracelets", {
-            method: "GET",
+        axios.get("https://brace-guardian.herokuapp.com/bracelets", {
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
+                authorization: "Bearer " + localStorage.getItem("token")
             }
-        })
-            .then(res => res.json())
-            .then(data => {
-                setBracelets(data);
+        }).then(res => {
+                console.log(res.data)
+                setBracelets(res.data);
+            })
+            .catch(err => console.log(err));
+        
+        axios.get("https://brace-guardian.herokuapp.com/get-profiles", {
+            headers: {
+                authorization: "Bearer " + localStorage.getItem("token")
+            }
+        }).then(res => {
+                console.log(res.data)
+                setProfiles(res.data);
             })
             .catch(err => console.log(err));
     }, []);
 
-    function addBracelet(bracelet){
-        if (username !== "" && macAddress !== "") {
+    async function addBracelet(bracelet, name, macAddress){
+        if (name !== "" && macAddress !== "") {
             setBracelets([...bracelets, bracelet]);
 
-            fetch("http://localhost:8080/add-bracelet", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
-                },
-                body: new URLSearchParams({
-                    "username": bracelet.username,
-                    "macAddress": bracelet.macAddress
-                }).toString(),
+            await axios.post("https://brace-guardian.herokuapp.com/add-bracelet", {
+                username: bracelet.name,
+                macAddress: bracelet.macAddress
+            }, {                
+                headers: {                   
+                    authorization: "Bearer " + localStorage.getItem("token")
+                }
             })
         }
     }
 
-    function deleteBracelet(id){
+    async function deleteBracelet(id){
         setBracelets(bracelets.filter(n => n.id !== id));
-        fetch( `http://localhost:3333/bracelets/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
+        await axios.delete( `https://brace-guardian.herokuapp.com/bracelets/${id}`, {
+            headers: {               
+                authorization: "Bearer " + localStorage.getItem("token")
             },
         });
     }
 
+    async function updateBracelet(brace, newName, newMacAddress){
+        setBracelets(bracelets.map(n => n.id === brace.id ? {...n, name: newName, macAddress: newMacAddress} : n));
+        console.log(brace.id)
+        if(newName != "" && newMacAddress != ""){
+            await axios.put( `http://brace-guardian.herokuapp.com/bracelets/${brace.id}`, {
+            username: newName,
+            macAddress: newMacAddress,
+            
+            }, {
+                headers: {
+                    authorization: "Bearer " + localStorage.getItem("token")
+                },
+            }).then((res) => console.log(res.data)).catch(err => console.log(err));
+        }
+        
+    }
+
+
     return(
-        <div style={{padding: 20, height: "100%", width: "100%"}}>
-            <div style={{width: "30%", top: "5%", left: 10}}>
+        <div style={{justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
+            <div style={{width: "100%", marginTop: "2rem", justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
                 <Autocomplete
                     id="search"
                     value={search}
-                    options={bracelets.map(option => option.username)}
+                    options={bracelets.map(option => option.name)}
                     style={{ width: 300 }}
                     onChange={(event, newValue) => {
                         if( newValue !== null ){
@@ -87,27 +101,51 @@ export default function Bracelets(){
                     )}
                 />
             </div>
-            <Grid style={{paddingTop: "5%", display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',}} container spacing={3}>
-                {bracelets.filter(bracelet => bracelet.username.toLowerCase().includes(search.toLowerCase())).map(bracelet => (
-                    <BraceletCard
-                        key={bracelet.id}
-                        bracelet={bracelet}
-                        deleteBracelet={deleteBracelet}
-                    />
-                ))}
+            <Grid style={{padding: "2rem", display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: "wrap"}} container spacing={3}>
+                
+                {bracelets.map(bracelet => {
+                    
+                    if(search === "" || bracelet.name.toLowerCase().includes(search.toLowerCase())){
+                        return(
+                            <BraceletCard
+                                key={bracelet.id}
+                                bracelet={bracelet}
+                                deleteBracelet={deleteBracelet}
+                                updateBracelet={updateBracelet}
+                            />
+                        )
+                    }
+                })}
             </Grid>
 
-            <Card style={{width: "30%", margin: 20}}>
+            <Card style={{width: "90%", margin: "auto", alignSelf: "center"}}>
                 <h1>Add Bracelet</h1>
-                <TextField style={{margin: 10}} label="Username" variant="outlined" value={username} onChange={(event) => setUsername(event.target.value)}/>
-                <TextField style={{margin: 10}} label="Mac Address" variant="outlined" value={macAddress} onChange={(event) => setMacAddress(event.target.value)}/>
+                <Autocomplete
+                    id="search"
+                    value={username}
+                    options={profiles.map(option => option.name)}
+                    onChange={(event, newValue) => {
+                        if( newValue !== null ){
+                            setUsername(newValue);
+                        }else {
+                            setUsername("");
+                        }
+                    }}
+                    renderInput={params => (
+                        <TextField
+                            style={{width: "90%",marginTop: 20, alignSelf: "center"}}
+                            {...params}
+                            label="Username"
+                            variant="outlined"
+                        />
+                    )}
+                />
+                <TextField style={{width: "90%",marginTop: 10, alignSelf: "center"}} label="Mac Address" variant="outlined" value={macAddress} onChange={(event) => setMacAddress(event.target.value)}/>
                 <Button style={{margin: 10}} variant="contained" color="primary" onClick={() => {
-                    addBracelet({id: (Object.keys(bracelets).length + 1), username: username, macAddress: macAddress});
+                    addBracelet({id: (Object.keys(bracelets).length + 1), name: username, macAddress: macAddress});
                     setUsername("");
                     setMacAddress("");
-                }}>Add Nurse</Button>
+                }}>Add Bracelet</Button>
             </Card>
         </div>
 
