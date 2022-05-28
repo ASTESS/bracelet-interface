@@ -1,6 +1,6 @@
 import {useEffect, useState, useContext} from "react";
 import NurseCard from "../Components/NurseCard";
-import {Autocomplete, Box, Button, Card, Grid, Select, TextField} from "@mui/material";
+import {Autocomplete, Box, Button, Card, Grid, Select, TextField, Typography} from "@mui/material";
 import Context from "../Contexts/Context";
 import SignUp from "../Components/SignUp";
 import axios from "axios";
@@ -82,8 +82,9 @@ export default function NurseOverview(){
     return(
         <div>
         <div style={{justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
-
+        
             <div style={{width: "100%", marginTop: "2rem", justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
+            <Typography variant="h4" style={{margin: "2rem 0"}}>Nurses</Typography>
                 <Autocomplete
                     id="search"
                     value={search}

@@ -1,7 +1,9 @@
 import BraceletCard from "../Components/BraceletCard";
-import {useEffect, useState} from "react";
-import {Autocomplete, Button, Card, Grid, TextField} from "@mui/material";
+import {useEffect, useState, useContext} from "react";
+import {Autocomplete, Button, Card, Grid, TextField, Typography} from "@mui/material";
 import axios from "axios";
+import Context from "../Contexts/Context";
+import SignUp from "../Components/SignUp";
 
 export default function Bracelets(){
     const [bracelets, setBracelets] = useState([]);
@@ -12,6 +14,7 @@ export default function Bracelets(){
 
     const [username, setUsername] = useState("");
     const [macAddress, setMacAddress] = useState("");
+    const {showSingUp, toggleSingUp} = useContext(Context)
 
     useEffect(() => {
         axios.get("https://brace-guardian.herokuapp.com/bracelets", {
@@ -79,7 +82,9 @@ export default function Bracelets(){
 
     return(
         <div style={{justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
+            
             <div style={{width: "100%", marginTop: "2rem", justifyContent: "center", alignItems: "center", display: "flex", flexDirection: "column"}}>
+            <Typography variant="h4" style={{margin: "2rem 0"}}>Bracelets</Typography>
                 <Autocomplete
                     id="search"
                     value={search}
@@ -147,6 +152,7 @@ export default function Bracelets(){
                     setMacAddress("");
                 }}>Add Bracelet</Button>
             </Card>
+            {showSingUp ? <SignUp toggle={() => toggleSingUp()}/> : null}
         </div>
 
     )
