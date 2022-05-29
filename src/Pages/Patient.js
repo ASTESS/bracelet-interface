@@ -92,8 +92,8 @@ export default function Patient() {
                     <TableBody>
                         {patient?.map(row => (
                             <TableRow key={row.dataId} >
-                                <TableCell >{row.created_at.split(' ')[0]}</TableCell> 
-                                <TableCell>{row.created_at.split(' ')[1]}</TableCell> 
+                                <TableCell >{row.created_at.split('T')[0]}</TableCell> 
+                                <TableCell>{row.created_at.split('T').pop().split('.')[0]}</TableCell> 
                                 <TableCell>{row.distance}m</TableCell>                              
                             </TableRow>
                         ))}

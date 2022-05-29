@@ -52,7 +52,7 @@ export default function BraceletCard(props){
                     onChange={e => setMacAddress(e.target.value)}
                 />
                 <Box style={{display: "flex", flexDirection: "row",alignItems: "center", justifyContent: "center", padding: 10}}>
-                    <Button variant="contained"  onClick={() => props.deleteBracelet(props.bracelet.id)}>Delete</Button>
+                    <Button variant={"contained"} style={{flex:1, marginLeft: 5}} onClick={() => props.deleteBracelet(props.bracelet.id)}>Delete</Button>
                     <Button
                         variant={"contained"}
                         style={{flex:1, marginLeft: 5}}
